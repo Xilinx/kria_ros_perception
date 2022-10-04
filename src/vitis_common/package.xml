@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>vitis_common</name>
+  <version>0.4.2</version>
+  <description>Common code for working with Vitis™ Unified Software Platform in ROS.</description>
+  <maintainer email="victor@accelerationrobotics.com">Víctor Mayoral-Vilches</maintainer>  
+  <license>Apache 2.0</license>
+
+  <url type="bugtracker">https://github.com/ros-acceleration/vitis_common/issues</url>
+  <url type="repository">https://github.com/ros-acceleration/vitis_common</url>
+
+  <author email="victor@accelerationrobotics.com">Víctor Mayoral-Vilches</author>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_vitis</buildtool_depend>
+
+  <build_depend>ocl-icd-opencl-dev</build_depend>
+  <build_depend>opencl-headers</build_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
+</package>
