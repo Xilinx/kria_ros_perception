@@ -1,5 +1,6 @@
 /*
-      ____  ____
+    Copyright (C) 2022, Advanced Micro Devices, Inc.
+     ____  ____
      /   /\/   /
     /___/  \  /   Copyright (c) 2021, Xilinx®.
     \   \   \/    Author: Víctor Mayoral Vilches <victorma@xilinx.com>

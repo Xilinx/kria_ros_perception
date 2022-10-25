@@ -13,7 +13,7 @@ Kria pre-built ROS perception example app
 1. Install ROS2 using debian package, see install guide [here](https://docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debians.html).
 2. Install few more dependencies from ros-humble using the below command
 ```bash
-$ sudo apt install ros-humble-gazebo-ros ros-humble-gazebo-plugins ros-humble-gazebo-msgs
+$ sudo apt install ros-humble-gazebo-ros ros-humble-gazebo-plugins ros-humble-gazebo-msgs python3-colcon-common-extensions
 ```
 3. Install Gazebo Classic 11.0, see install guide [here](https://classic.gazebosim.org/tutorials?tut=install_ubuntu)
 4. Get files to setup and run simulation
@@ -62,7 +62,7 @@ ros2 launch perception_2nodes trace_rectify_resize.launch.py
 ## License
 
 ```
-Copyright (C) 2022 Xilinx, Inc.  All rights reserved.
+Copyright (C) 2022, Advanced Micro Devices, Inc.  All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

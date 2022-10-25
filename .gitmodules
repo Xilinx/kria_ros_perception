@@ -1,4 +1,0 @@
-[submodule "src/ros2_tracing"]
-	path = src/ros2_tracing
-	url = https://github.com/ros2/ros2_tracing
-	branch = humble

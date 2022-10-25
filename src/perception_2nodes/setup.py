@@ -1,3 +1,6 @@
+#
+# Copyright (C) 2022, Advanced Micro Devices, Inc.
+#
 from setuptools import setup
 import os
 from glob import glob
