@@ -81,7 +81,7 @@ ResizeNodeFPGAStreamlined::ResizeNodeFPGAStreamlined(const rclcpp::NodeOptions &
   // TODO: generalize this using launch extra_args for composable Nodes
   // see https://github.com/ros2/launch_ros/blob/master/launch_ros/launch_ros/descriptions/composable_node.py#L45
   char* fileBuf = read_binary_file(
-        "/lib/firmware/xilinx/image_proc_streamlined/image_proc_streamlined.xclbin",
+        "/lib/firmware/xilinx/kr260-perception/kr260-image-proc-streamlined.xclbin",
         fileBufSize);
   cl::Program::Binaries bins{{fileBuf, fileBufSize}};
   devices.resize(1);
