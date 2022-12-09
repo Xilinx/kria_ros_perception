@@ -18,7 +18,7 @@ $ sudo apt install ros-humble-gazebo-ros ros-humble-gazebo-plugins ros-humble-ga
 3. Install Gazebo Classic 11.0, see install guide [here](https://classic.gazebosim.org/tutorials?tut=install_ubuntu)
 4. Get files to setup and run simulation
 ```bash
-$ git clone https://gitenterprise.xilinx.com/SOM/kria_ros_perception
+$ https://github.com/Xilinx/kria_ros_perception.git
 $ cd kria_ros_perception
 $ rm -rf src/image_proc src/tracetools_image_pipeline src/vitis_common src/tracing src/image_pipeline_examples
 ```
