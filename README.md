@@ -1,64 +1,25 @@
-# kria_ros_perception
-Kria pre-built ROS perception example app
+<h1 align="center">KRIA ROS PERCEPTION APPLICATION</h1>
 
-## Gazebo simulation setup on workstation running Ubuntu 22.04
-
-### Installing ROS Humble and gazebo classic
-- Follow [these](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) instructions to install ros on x86 machine
-- Install Gazebo Classic from [here](https://classic.gazebosim.org/tutorials?tut=install_ubuntu)
-> :warning: ROS 2 Humble ships with Ignition Gazebo (renamed to “Gazebo”). Installing Gazebo Classic (Gazebo 11.0) is still possible but requires some manual work. Some of the examples below were developed with Gazebo Classic. In turn, examples might be rewritten with Ignition Gazebo (“Gazebo”) to facilitate the flows.
-
-### Environment Setup On Host Machine(Ubuntu 22.04)
-
-1. Install ROS2 using debian package, see install guide [here](https://docs.ros.org/en/rolling/Installation/Ubuntu-Install-Debians.html).
-2. Install few more dependencies from ros-humble using the below command
-```bash
-$ sudo apt install ros-humble-gazebo-ros ros-humble-gazebo-plugins ros-humble-gazebo-msgs python3-colcon-common-extensions
-```
-3. Install Gazebo Classic 11.0, see install guide [here](https://classic.gazebosim.org/tutorials?tut=install_ubuntu)
-4. Get files to setup and run simulation
-```bash
-$ https://github.com/Xilinx/kria_ros_perception.git
-$ cd kria_ros_perception
-$ rm -rf src/image_proc src/tracetools_image_pipeline src/vitis_common src/tracing src/image_pipeline_examples
-```
-3. Install Simulation from the below steps
-```bash
-$ source /opt/ros/humble/setup.bash
-$ colcon build
-```
-4. Run simulation on workstation
-```bash
-$ source install/setup.bash  # source the workspace as an overlay
-$ ros2 launch perception_2nodes simulation.launch.py
-```
-
-# Running perception on KRIA
-
-## Install ROS Humble
-- Follow [these](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html) instructions to install ros on KRIA kr260
-
-## Install Perception application
-- Install the application debian using the below command. It will install the app along with all the dependencies required for running the the perception node
-```
-sudo apt install -y ros-humble-xlnx-ros-perception_0.1.0-0jammy_arm64.deb
-```
-> :warning: User is expected to install ROS Humble using the above mentioned link. Otherwise the application may not work
+## Introduction
+This repository contains the pre-built ROS perception example application. The ROS 2 Perception Node accelerated application implements a subset of image_pipeline, which is one of the most popular packages in the ROS 2 ecosystem and a core piece of the ROS perception stack. To get more details on this application please check the documentation [here](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/docs/introduction.html).
+<br><br>
+This application is based on [KRS](https://xilinx.github.io/KRS/sphinx/build/html/index.html)(Kria Robotics Framework) and it demonstrates the capabilities of KRS on how a roboticits can leverage programmable logic to accelerate their applications efficiently without having deeper hardware knowledge. This simple application is implemented to give users a quick hands on with KRS framework and get roboticists started to write their hardware accelerated applications on Kria Robotics starter kit easily.
 
 
-## Running CPU only varient
-```
-ros2 launch perception_2nodes trace_rectify_resize.launch.py
-```
+## Hardware Requirement
 
-## Running Streamlining Accelerated varient
+- KR260 Robotics Starter Kit
+- KR260 Power Supply & Adapter (Included with KR260 Robotics Starter Kit)
+- Cat 5e Ethernet Cable (Included with KR260 Robotics Starter Kit)
+- USB-A to micro-B Cable (Included with KR260 Robotics Starter Kit)
+- 16GB MicroSD Cards (Included with KR260 Robotics Starter Kit)
+- Ubuntu 22.04 workstation(x86 Host) with ethernet port for setting up simulation on Gazebo and Visualizing the simulated nodes on RQT
 
-  - This Using AXI4-Stream interface to create an intra-FPGA ROS 2 communication queue which is used to pass data across nodes through the FPGA
-  ```
-  xmutil unloadapp
-  xmutil loadapp image_proc_streamlined
-  ros2 launch perception_2nodes trace_rectify_resize_fpga_streamlined.launch.py
-  ```
+
+## Hardware Setup And Execution
+
+Detailed steps on how you can setup your host environment, target board environment and how to deploy and execute this application, are very well explained in the documentation [here](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/docs/app_deployment.html). Please refer to [Perception app documentation](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/ros2_perception_node_landing.html) page and try this application.
+
 ## License
 
 ```
