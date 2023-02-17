@@ -18,7 +18,7 @@ This application is based on [KRS](https://xilinx.github.io/KRS/sphinx/build/htm
 
 ## Hardware Setup And Execution
 
-Detailed steps on how you can setup your host environment, target board environment and how to deploy and execute this application, are very well explained in the documentation [here](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/docs/app_deployment.html). Please refer to [Perception app documentationhttps://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/ros2_perception_node_landing.html](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/ros2_perception_node_landing.html) page and try this application.
+Detailed steps on how you can setup your host environment, target board environment and how to deploy and execute this application, are very well explained in the documentation [here](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/docs/app_deployment.html). Please refer to [Perception app documentation](https://xilinx.github.io/kria-apps-docs/kr260/build/html/docs/ros2_perception_node/ros2_perception_node_landing.html) page and try this application.
 
 ## License
 
