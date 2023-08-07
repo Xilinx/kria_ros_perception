@@ -132,8 +132,8 @@ namespace image_proc
     cl::Program::Binaries bins{{fileBuf, fileBufSize}};
     devices.resize(1);
     OCL_CHECK(err, cl::Program program(*context_, devices, bins, NULL, &err));
-    OCL_CHECK(err, krnl_rectify = new cl::Kernel(program, "remap_accel", &err));
-    OCL_CHECK(err, krnl_resize = new cl::Kernel(program, "resize_accel", &err));
+    OCL_CHECK(err, krnl_rectify = new cl::Kernel(program, "rectify_accel_streamlined", &err));
+    OCL_CHECK(err, krnl_resize = new cl::Kernel(program, "resize_accel_streamlined", &err));
     std::string package_share_directory = ament_index_cpp::get_package_share_directory("image_proc");
     std::string tmpx = package_share_directory + "/../mapx.txt";
     std::string tmpy = package_share_directory + "/../mapy.txt";
