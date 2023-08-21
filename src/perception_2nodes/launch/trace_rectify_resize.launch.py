@@ -57,6 +57,7 @@ def generate_launch_description():
         executable="component_container",
         composable_node_descriptions=[
             ComposableNode(
+                namespace="cpu",
                 package="image_proc",
                 plugin="image_proc::RectifyNode",
                 name="rectify_node",
@@ -68,7 +69,7 @@ def generate_launch_description():
             ),
 
             ComposableNode(
-                namespace="resize",
+                namespace="cpu",
                 package="image_proc",
                 plugin="image_proc::ResizeNode",
                 name="resize_node",

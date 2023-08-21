@@ -150,6 +150,8 @@ This document shows how to setup the board and environment to execute the Percep
 ## Run The Application on KR260
 This application has two flavours, which are developed in way that you can understand how he can tweak the application to achieve a desired performance during the development. Below are the versions and their details:
 
+> **_NOTE:_** This application assumes camera resolution to be 640x480, and uses a custom map for rectifying the image  
+
 1) **CPU Baseline**: This is a simplistic version, where nodes are not accelerated and are executed on CPU. This version should allow you to get familiar with the working environment and understand easiness in working with KRS based applications. Use the following steps to execute:
 
    ```bash
@@ -159,7 +161,7 @@ This application has two flavours, which are developed in way that you can under
 
    Below is the gif showing the gazebo simulation window(left half) along with RQt window(right half) with node graph and /camera/image_raw, /image_rect and /resize/resize image views. You might need to reload the plugin windows to update the node graph and image views.
 
-   ![graph](../media//perception_graph.gif)
+   ![graph](../media/cpu.gif)
 
 2) **FPGA streamline accelerated**: In this application, ROS *Components* `RectifyNodeFPGAStreamlined` and `ResizeNodeFPGAStreamlined` are redesigned to leverage hardware acceleration. However, besides offloading perception tasks to the FPGA, each <ins>leverages an AXI4-Stream interface to **create an intra-FPGA ROS 2 communication queue**, which is then used to pass data across nodes through the FPGA</ins>. This allows to completely avoid the ROS 2 message-passing system and optimizes dataflow achieving a **24.42% total speedup**. Steps to launch the streamlined accelerated version are:
 
@@ -173,7 +175,7 @@ This application has two flavours, which are developed in way that you can under
 
    Below is the gif showing the gazebo simulation window(top half) along with the RQt window(bottom half) with node graph and /camera/image_raw, /image_rect and /resize image views. Since the data is transferred via streaming interface from rectify to resize, no image is seen in the rectify image view. You might need to reload the plugin windows to update the node graph and image views.
 
-   ![streamlined](../media/perception_graph_streamlined.gif)
+   ![streamlined](../media/fpga.gif)
 
 > **_NOTE:_** For benchmark results using Tracetools and other ROS2 acceleration examples, refer to [Kria Robotics Stack](https://xilinx.github.io/KRS/sphinx/build/html/index.html) (KRS).
 
