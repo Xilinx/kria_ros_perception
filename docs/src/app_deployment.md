@@ -135,7 +135,7 @@ This document shows how to setup the board and environment to execute the Percep
       ```bash
       mkdir -p ~/Downloads
       cd ~/Downloads
-      wget https://github.com/Xilinx/kria_ros_perception/releases/download/xlnx-rel-v2022.1_update4/kria-ros-perception_1.0-1_arm64.deb 
+      wget https://github.com/Xilinx/kria_ros_perception/releases/download/xlnx-rel-v2022.1_update4/kria-ros-perception_1.3-1_arm64.deb 
       sudo apt install ./kria-ros-perception_1.0-1_arm64.deb
       ```
 
