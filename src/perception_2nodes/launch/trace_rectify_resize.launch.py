@@ -57,29 +57,31 @@ def generate_launch_description():
         executable="component_container",
         composable_node_descriptions=[
             ComposableNode(
+                namespace="cpu",
                 package="image_proc",
                 plugin="image_proc::RectifyNode",
                 name="rectify_node",
                 remappings=[
                     ("image", "/camera/image_raw"),
                     ("camera_info", "/camera/camera_info"),
+                    ("image_rect", "/cpu/image_rect"),
                 ],
             ),
 
             ComposableNode(
-                namespace="resize",
+                namespace="cpu",
                 package="image_proc",
                 plugin="image_proc::ResizeNode",
                 name="resize_node",
                 remappings=[
                     ("camera_info", "/camera/camera_info"),
-                    ("image", "/image_rect"),
-                    ("resize", "resize"),
+                    ("image", "/cpu/image_rect"),
+                    ("resize", "/cpu/resize"),
                 ],
                 parameters=[
                     {
                         "scale_height": 2.0,
-                        "scale_width": 2.0,
+                        "scale_width": 3.0,
                     }
                 ],
             ),

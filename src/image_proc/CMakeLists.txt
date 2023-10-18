@@ -77,15 +77,15 @@ set(node_plugins "${node_plugins}image_proc::ResizeNode;$<TARGET_FILE:resize>\n"
   ##########
 
   # rectify_resize_fpga_streamlined component - 1 Component, 2 kernels
-#  ament_auto_add_library(rectify_resize_fpga_streamlined SHARED src/rectify_resize_fpga_streamlined.cpp)
-#  target_include_directories(rectify_resize_fpga_streamlined PUBLIC
+  ament_auto_add_library(rectify_resize_fpga_streamlined SHARED src/rectify_resize_fpga_streamlined.cpp)
+  target_include_directories(rectify_resize_fpga_streamlined PUBLIC
     # $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/include/vitis_common>
-#  )
-#  target_link_libraries(rectify_resize_fpga_streamlined ${OpenCL_LIBRARY})
-#  ament_target_dependencies(rectify_resize_fpga_streamlined)
-#  target_compile_definitions(rectify_resize_fpga_streamlined PRIVATE "COMPOSITION_BUILDING_DLL")
-#  rclcpp_components_register_nodes(rectify_resize_fpga_streamlined "image_proc::RectifyResizeNodeFPGAStreamlined")
-#  set(node_plugins "${node_plugins}image_proc::RectifyResizeNodeFPGAStreamlined;$<TARGET_FILE:rectify_resize_fpga_streamlined>\n")
+  )
+  target_link_libraries(rectify_resize_fpga_streamlined ${OpenCL_LIBRARY})
+  ament_target_dependencies(rectify_resize_fpga_streamlined)
+  target_compile_definitions(rectify_resize_fpga_streamlined PRIVATE "COMPOSITION_BUILDING_DLL")
+  rclcpp_components_register_nodes(rectify_resize_fpga_streamlined "image_proc::RectifyResizeNodeFPGAStreamlined")
+  set(node_plugins "${node_plugins}image_proc::RectifyResizeNodeFPGAStreamlined;$<TARGET_FILE:rectify_resize_fpga_streamlined>\n")
 
   # rectify_fpga_streamlined component - 1 Kernel, 1 Component (part of group)
   ament_auto_add_library(rectify_fpga_streamlined SHARED src/rectify_fpga_streamlined.cpp)
@@ -117,6 +117,12 @@ install(
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
 )
+
+install(FILES
+    maps/mapx.txt
+    maps/mapy.txt
+    DESTINATION share
+    )
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

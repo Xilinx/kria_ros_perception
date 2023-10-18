@@ -27,24 +27,14 @@ limitations under the License.
 //  see https://gitlab.com/ros-tracing/ros2_tracing/-/issues/137
 
 #include <memory>
-#include "image_proc/rectify_fpga_streamlined.hpp"
-#include "image_proc/resize_fpga_streamlined.hpp"
+#include "image_proc/rectify_resize_fpga_streamlined.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-
-  rclcpp::executors::MultiThreadedExecutor exec;
-  rclcpp::NodeOptions options;
-  auto rectify_node =
-    std::make_shared<image_proc::RectifyNodeFPGAStreamlined>(options);
-  auto resize_node =
-    std::make_shared<image_proc::ResizeNodeFPGAStreamlined>(options);
-  exec.add_node(rectify_node);
-  exec.add_node(resize_node);
-
-  exec.spin();
+  rclcpp::spin(
+    std::make_shared<image_proc::RectifyResizeNodeFPGAStreamlined>(rclcpp::NodeOptions()));
   rclcpp::shutdown();
   return 0;
 }

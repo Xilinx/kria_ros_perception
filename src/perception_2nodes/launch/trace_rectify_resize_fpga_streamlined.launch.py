@@ -92,12 +92,13 @@ def generate_launch_description():
         remappings=[
             ("image", "/camera/image_raw"),
             ("camera_info", "/camera/camera_info"),
-            ("resize", "resize"),
+            ("resize", "/fpga/resize"),
+            ("image_rect", "/fpga/image_rect"),
         ],
         parameters=[
             {
                 "scale_height": 2.0,
-                "scale_width": 2.0,
+                "scale_width": 3.0,
             }
         ]
     )

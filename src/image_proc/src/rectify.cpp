@@ -41,125 +41,163 @@
 
 #include "tracetools_image_pipeline/tracetools.h"
 #include "image_proc/rectify.hpp"
+#include <ament_index_cpp/get_package_share_directory.hpp>
+
 
 namespace image_proc
 {
 
-RectifyNode::RectifyNode(const rclcpp::NodeOptions & options)
-: Node("RectifyNode", options)
-{
-  queue_size_ = this->declare_parameter("queue_size", 5);
-  interpolation = this->declare_parameter("interpolation", 1);
-  pub_rect_ = image_transport::create_publisher(this, "image_rect");
-  subscribeToCamera();
-}
-
-// Handles (un)subscribing when clients (un)subscribe
-void RectifyNode::subscribeToCamera()
-{
-  std::lock_guard<std::mutex> lock(connect_mutex_);
-
-  /*
-  *  SubscriberStatusCallback not yet implemented
-  *
-  if (pub_rect_.getNumSubscribers() == 0)
-    sub_camera_.shutdown();
-  else if (!sub_camera_)
+  RectifyNode::RectifyNode(const rclcpp::NodeOptions &options)
+      : Node("RectifyNode", options)
   {
-  */
-  sub_camera_ = image_transport::create_camera_subscription(
-    this, "image", std::bind(
-      &RectifyNode::imageCb,
-      this, std::placeholders::_1, std::placeholders::_2), "raw");
-  // }
-}
-
-void RectifyNode::imageCb(
-  const sensor_msgs::msg::Image::ConstSharedPtr & image_msg,
-  const sensor_msgs::msg::CameraInfo::ConstSharedPtr & info_msg)
-{
-  TRACEPOINT(
-    image_proc_rectify_cb_init,
-    static_cast<const void *>(this),
-    static_cast<const void *>(&(*image_msg)),
-    static_cast<const void *>(&(*info_msg)));
-
-  if (pub_rect_.getNumSubscribers() < 1) {
-    TRACEPOINT(
-      image_proc_rectify_cb_fini,
-      static_cast<const void *>(this),
-      static_cast<const void *>(&(*image_msg)),
-      static_cast<const void *>(&(*info_msg)));
-    return;
-  }
-
-  // Verify camera is actually calibrated
-  if (info_msg->k[0] == 0.0) {
-    RCLCPP_ERROR(
-      this->get_logger(), "Rectified topic '%s' requested but camera publishing '%s' "
-      "is uncalibrated", pub_rect_.getTopic().c_str(), sub_camera_.getInfoTopic().c_str());
-    TRACEPOINT(
-      image_proc_rectify_cb_fini,
-      static_cast<const void *>(this),
-      static_cast<const void *>(&(*image_msg)),
-      static_cast<const void *>(&(*info_msg)));
-    return;
-  }
-
-  // If zero distortion, just pass the message along
-  bool zero_distortion = true;
-
-  for (size_t i = 0; i < info_msg->d.size(); ++i) {
-    if (info_msg->d[i] != 0.0) {
-      zero_distortion = false;
-      break;
+    queue_size_ = this->declare_parameter("queue_size", 5);
+    interpolation = this->declare_parameter("interpolation", 1);
+    custom_maps = this->declare_parameter("custom_maps", true);
+    std::string package_share_directory = ament_index_cpp::get_package_share_directory("image_proc");
+    std::string tmpx =  package_share_directory + "/../mapx.txt";
+    std::string tmpy =  package_share_directory + "/../mapy.txt";
+//    std::cout << "Path of image proc package is: " << tmpx.c_str() << "\n";
+    custom_map_x.create(480, 640, CV_32FC1);
+    custom_map_y.create(480, 640, CV_32FC1);
+    FILE *fp_mx, *fp_my;
+    fp_mx = fopen(tmpx.c_str(), "r");
+    fp_my = fopen(tmpy.c_str(), "r");
+    for (int i = 0; i < 480; i++)
+    {
+      for (int j = 0; j < 640; j++)
+      {
+        float valx, valy;
+        if (fscanf(fp_mx, "%f", &valx) != 1)
+        {
+          fprintf(stderr, "Not enough data in the provided map_x file ... !!!\n ");
+        }
+        if (fscanf(fp_my, "%f", &valy) != 1)
+        {
+          fprintf(stderr, "Not enough data in the provided map_y file ... !!!\n ");
+        }
+        custom_map_x.at<float>(i, j) = valx;
+        custom_map_y.at<float>(i, j) = valy;
+      }
     }
+
+    pub_rect_ = image_transport::create_publisher(this, "image_rect");
+    subscribeToCamera();
   }
 
-  // This will be true if D is empty/zero sized
-  if (zero_distortion) {
-    pub_rect_.publish(image_msg);
+  // Handles (un)subscribing when clients (un)subscribe
+  void RectifyNode::subscribeToCamera()
+  {
+    std::lock_guard<std::mutex> lock(connect_mutex_);
+
+    /*
+    *  SubscriberStatusCallback not yet implemented
+    *
+    if (pub_rect_.getNumSubscribers() == 0)
+      sub_camera_.shutdown();
+    else if (!sub_camera_)
+    {
+    */
+    sub_camera_ = image_transport::create_camera_subscription(
+        this, "image", std::bind(&RectifyNode::imageCb, this, std::placeholders::_1, std::placeholders::_2), "raw");
+    // }
+  }
+
+  void RectifyNode::imageCb(
+      const sensor_msgs::msg::Image::ConstSharedPtr &image_msg,
+      const sensor_msgs::msg::CameraInfo::ConstSharedPtr &info_msg)
+  {
     TRACEPOINT(
-      image_proc_rectify_cb_fini,
-      static_cast<const void *>(this),
-      static_cast<const void *>(&(*image_msg)),
-      static_cast<const void *>(&(*info_msg)));
-    return;
+        image_proc_rectify_cb_init,
+        static_cast<const void *>(this),
+        static_cast<const void *>(&(*image_msg)),
+        static_cast<const void *>(&(*info_msg)));
+
+    if (pub_rect_.getNumSubscribers() < 1)
+    {
+      TRACEPOINT(
+          image_proc_rectify_cb_fini,
+          static_cast<const void *>(this),
+          static_cast<const void *>(&(*image_msg)),
+          static_cast<const void *>(&(*info_msg)));
+      return;
+    }
+
+    // Verify camera is actually calibrated
+    if (info_msg->k[0] == 0.0)
+    {
+      RCLCPP_ERROR(
+          this->get_logger(), "Rectified topic '%s' requested but camera publishing '%s' "
+                              "is uncalibrated",
+          pub_rect_.getTopic().c_str(), sub_camera_.getInfoTopic().c_str());
+      TRACEPOINT(
+          image_proc_rectify_cb_fini,
+          static_cast<const void *>(this),
+          static_cast<const void *>(&(*image_msg)),
+          static_cast<const void *>(&(*info_msg)));
+      return;
+    }
+
+    // If zero distortion, just pass the message along
+    bool zero_distortion = true;
+
+    for (size_t i = 0; i < info_msg->d.size(); ++i)
+    {
+      if (info_msg->d[i] != 0.0)
+      {
+        zero_distortion = false;
+        break;
+      }
+    }
+
+    // This will be true if D is empty/zero sized
+    if (zero_distortion)
+    {
+      pub_rect_.publish(image_msg);
+      TRACEPOINT(
+          image_proc_rectify_cb_fini,
+          static_cast<const void *>(this),
+          static_cast<const void *>(&(*image_msg)),
+          static_cast<const void *>(&(*info_msg)));
+      return;
+    }
+
+    // Update the camera model
+    model_.fromCameraInfo(info_msg);
+
+    // Create cv::Mat views onto both buffers
+    const cv::Mat image = cv_bridge::toCvShare(image_msg)->image;
+    cv::Mat rect;
+
+    // Rectify and publish
+    TRACEPOINT(
+        image_proc_rectify_init,
+        static_cast<const void *>(this),
+        static_cast<const void *>(&(*image_msg)),
+        static_cast<const void *>(&(*info_msg)));
+    if(custom_maps)
+      cv::remap( image, rect, custom_map_x, custom_map_y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0) );
+    else
+      model_.rectifyImage(image, rect, interpolation);
+      
+    TRACEPOINT(
+        image_proc_rectify_fini,
+        static_cast<const void *>(this),
+        static_cast<const void *>(&(*image_msg)),
+        static_cast<const void *>(&(*info_msg)));
+
+    // Allocate new rectified image message
+    sensor_msgs::msg::Image::SharedPtr rect_msg =
+        cv_bridge::CvImage(image_msg->header, image_msg->encoding, rect).toImageMsg();
+    pub_rect_.publish(rect_msg);
+
+    TRACEPOINT(
+        image_proc_rectify_cb_fini,
+        static_cast<const void *>(this),
+        static_cast<const void *>(&(*image_msg)),
+        static_cast<const void *>(&(*info_msg)));
   }
 
-  // Update the camera model
-  model_.fromCameraInfo(info_msg);
-
-  // Create cv::Mat views onto both buffers
-  const cv::Mat image = cv_bridge::toCvShare(image_msg)->image;
-  cv::Mat rect;
-
-  // Rectify and publish
-  TRACEPOINT(
-    image_proc_rectify_init,
-    static_cast<const void *>(this),
-    static_cast<const void *>(&(*image_msg)),
-    static_cast<const void *>(&(*info_msg)));
-  model_.rectifyImage(image, rect, interpolation);
-  TRACEPOINT(
-    image_proc_rectify_fini,
-    static_cast<const void *>(this),
-    static_cast<const void *>(&(*image_msg)),
-    static_cast<const void *>(&(*info_msg)));
-
-  // Allocate new rectified image message
-  sensor_msgs::msg::Image::SharedPtr rect_msg =
-    cv_bridge::CvImage(image_msg->header, image_msg->encoding, rect).toImageMsg();
-  pub_rect_.publish(rect_msg);
-
-  TRACEPOINT(
-    image_proc_rectify_cb_fini,
-    static_cast<const void *>(this),
-    static_cast<const void *>(&(*image_msg)),
-    static_cast<const void *>(&(*info_msg)));
-}
-
-}  // namespace image_proc
+} // namespace image_proc
 
 #include "rclcpp_components/register_node_macro.hpp"
 

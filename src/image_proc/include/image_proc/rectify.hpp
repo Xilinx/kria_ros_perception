@@ -57,8 +57,10 @@ private:
 
   int queue_size_;
   int interpolation;
+  bool custom_maps;
   std::mutex connect_mutex_;
   image_transport::Publisher pub_rect_;
+  cv::Mat custom_map_x, custom_map_y;
 
   // Processing state (note: only safe because we're using single-threaded NodeHandle!)
   image_geometry::PinholeCameraModel model_;

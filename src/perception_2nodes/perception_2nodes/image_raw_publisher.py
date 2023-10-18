@@ -1,3 +1,6 @@
+#
+# Copyright (C) 2022, Advanced Micro Devices, Inc.
+#
 import rclpy
 import cv2
 import copy

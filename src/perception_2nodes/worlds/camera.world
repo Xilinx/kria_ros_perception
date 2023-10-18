@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--# Copyright (C) 2022, Advanced Micro Devices, Inc.-->
 <sdf version='1.7'>
   <world name='perception_camera_chessboard'>
     <light name='sun' type='directional'>
